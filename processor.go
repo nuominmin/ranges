@@ -23,16 +23,22 @@ var ErrRangeIsEmpty = errors.New("range is empty")
 // ErrDataNotFound 数据不存在
 var ErrDataNotFound = errors.New("data not found for the given number")
 
-type RangeProcessor[T any] struct {
+type Processor[T any] interface {
+	AddRange(r Range[T]) error
+	Handle(number uint64, handler func(data T) error) error
+	GetData(number uint64) (data T, ok bool)
+}
+
+type processorImpl[T any] struct {
 	ranges []Range[T]
 }
 
-func NewRangeProcessor[T any]() *RangeProcessor[T] {
-	return &RangeProcessor[T]{}
+func NewProcessor[T any]() Processor[T] {
+	return &processorImpl[T]{}
 }
 
 // AddRange 添加一个新的范围到 RangeProcessor 中
-func (pb *RangeProcessor[T]) AddRange(r Range[T]) error {
+func (pb *processorImpl[T]) AddRange(r Range[T]) error {
 	if r.Start == 0 {
 		return ErrInvalidStart
 	}
@@ -56,7 +62,7 @@ func (pb *RangeProcessor[T]) AddRange(r Range[T]) error {
 	return nil
 }
 
-func (pb *RangeProcessor[T]) Handle(number uint64, handler func(data T) error) error {
+func (pb *processorImpl[T]) Handle(number uint64, handler func(data T) error) error {
 	data, ok := pb.GetData(number)
 	if !ok {
 		return ErrDataNotFound
@@ -64,7 +70,7 @@ func (pb *RangeProcessor[T]) Handle(number uint64, handler func(data T) error) e
 	return handler(data)
 }
 
-func (pb *RangeProcessor[T]) GetData(number uint64) (data T, ok bool) {
+func (pb *processorImpl[T]) GetData(number uint64) (data T, ok bool) {
 	for i := 0; i < len(pb.ranges); i++ {
 		if number >= pb.ranges[i].Start {
 			return pb.ranges[i].Data, true
