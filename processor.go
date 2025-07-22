@@ -4,9 +4,8 @@
  *
  * 主要功能：
  * 1. 根据起始值定义数据范围区间
- * 2. 支持降序排列的范围查找
+ * 2. 降序排列的范围查找
  * 3. 根据输入数值快速定位对应的配置数据
- * 4. 提供完整的错误处理机制
  *
  * 使用场景：
  * - 用户等级配置（根据积分/经验值确定等级）
@@ -71,7 +70,7 @@ type Processor[T any] interface {
 	// GetDataWithRange 根据数值获取对应的数据配置，同时返回匹配的范围区间
 	// 返回值：
 	// - start: 匹配的范围起始值
-	// - upperBound: 匹配的范围上界值（下一个区间的start-1，如果是最高区间则为-1表示无上界）
+	// - upperBound: 匹配的范围上界值（最高区间则为-1表示无上界）
 	// - data: 匹配范围的数据配置
 	// - ok: 是否找到匹配的范围
 	GetDataWithRange(number int64) (start int64, upperBound int64, data T, ok bool)
