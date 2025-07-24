@@ -166,12 +166,12 @@ func (pb *processorImpl[T]) GetDataWithRange(number int64) (start int64, upperBo
 	for i := 0; i < len(pb.ranges); i++ {
 		// 找到第一个满足条件的范围：输入值 >= 起始值
 		if number >= pb.ranges[i].Start {
-			// 确定结束值
+			// 确定上界值
 			var upperBound int64
-			if i == len(pb.ranges)-1 {
-				upperBound = -1 // 表示没有上界
+			if i == 0 {
+				upperBound = -1 // 最高区间，表示没有上界
 			} else {
-				upperBound = pb.ranges[i-1].Start
+				upperBound = pb.ranges[i-1].Start // 前一个区间的起始值作为当前区间的上界
 			}
 			return pb.ranges[i].Start, upperBound, pb.ranges[i].Data, true
 		}
@@ -180,3 +180,4 @@ func (pb *processorImpl[T]) GetDataWithRange(number int64) (start int64, upperBo
 	// 如果没有找到匹配的范围，返回零值和false
 	return 0, 0, data, false
 }
+
