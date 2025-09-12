@@ -90,3 +90,46 @@ if ok {
 
 ```
 
+```go
+	// TimeToMinutes 将 HH:MM 转换为一天中的分钟数 (0~1439)
+	func TimeToMinutes(hour, minute int) int64 {
+		return int64(hour*60 + minute)
+	}
+
+
+	// 定义工作日时间段
+	p := ranges.NewProcessor[string]()
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(6, 0), Data: "早晨"})   // 06:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(9, 0), Data: "上午"})   // 09:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(12, 0), Data: "中午"})  // 12:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(13, 0), Data: "下午"})  // 13:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(18, 0), Data: "傍晚"})  // 18:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(21, 0), Data: "深夜"})  // 21:00
+	p.AddRange(ranges.Range[string]{Start: TimeToMinutes(0, 0), Data: "深夜"})   // 00:00–06:00
+
+	// 测试几个时间点
+	tests := []string{"06:00", "08:30", "09:00", "12:00", "12:30", "19:00", "23:30", "02:00"}
+	for _, ts := range tests {
+		t, _ := time.Parse("15:04", ts)
+		minutes := TimeToMinutes(t.Hour(), t.Minute())
+
+		if _, _, data, ok := p.GetDataWithRange(minutes); ok {
+			fmt.Printf("%s → %s\n", ts, data)
+		} else {
+			fmt.Printf("%s → 未找到时段\n", ts)
+		}
+	}
+
+
+输出结果
+---
+06:00 → 上午
+08:30 → 上午
+09:00 → 中午
+12:00 → 中午
+12:30 → 下午
+19:00 → 深夜
+23:30 → 深夜
+02:00 → 深夜
+```
+
