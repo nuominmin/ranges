@@ -8,7 +8,7 @@
 go get github.com/nuominmin/ranges
 ```
 
-## 示例
+## 示例1
 
 ``` go
 type UserConfig struct {
@@ -38,6 +38,7 @@ if ok {
 }
 ```
 
+## 示例2
 ``` go
   type Conf struct {
 		WalletAddr   string
@@ -90,6 +91,7 @@ if ok {
 
 ```
 
+## 示例3
 ```go
 	// TimeToMinutes 将 HH:MM 转换为一天中的分钟数 (0~1439)
 	func TimeToMinutes(hour, minute int) int64 {
