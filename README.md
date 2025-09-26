@@ -100,7 +100,7 @@ processor, err := ranges.NewRangeBuilder[string]().
     AddRange(TimeToMinutes(13, 0), "下午").  // 13:00
     AddRange(TimeToMinutes(18, 0), "傍晚").  // 18:00
     AddRange(TimeToMinutes(21, 0), "深夜").  // 21:00
-    AddRange(TimeToMinutes(0, 0), "深夜").   // 00:00–06:00
+    WithCircular().
     Build()
 
 if err != nil {
@@ -127,7 +127,7 @@ for _, ts := range tests {
 // 12:00 → 中午 (范围: 720-780)
 // 12:30 → 中午 (范围: 720-780)
 // 19:00 → 傍晚 (范围: 1080-1260)
-// 23:30 → 深夜 (范围: 1260--1)
-// 02:00 → 深夜 (范围: 0-360)
+// 23:30 → 深夜 (范围: 1260-360)
+// 02:00 → 深夜 (范围: 1260-360)
 ```
 
