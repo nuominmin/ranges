@@ -2,8 +2,9 @@ package ranges_test
 
 import (
 	"fmt"
-	"github.com/nuominmin/ranges"
 	"testing"
+
+	"github.com/nuominmin/ranges"
 )
 
 func TestRangeProcessor_Handle(t *testing.T) {
@@ -89,8 +90,8 @@ func TestTimeRangeProcessor(t *testing.T) {
 		AddRange(720, TimeConfig{Period: "中午", Description: "12:00 - 13:00"}).
 		AddRange(780, TimeConfig{Period: "下午", Description: "13:00 - 18:00"}).
 		AddRange(1080, TimeConfig{Period: "傍晚", Description: "18:00 - 21:00"}).
-		AddRange(0, TimeConfig{Period: "深夜", Description: "21:00 - 06:00"}).    // 深夜时段有两个起始值
 		AddRange(1260, TimeConfig{Period: "深夜", Description: "21:00 - 06:00"}). // 深夜时段有两个起始值
+		WithCircular().
 		Build()
 
 	if err != nil {
